@@ -1,0 +1,45 @@
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.deployment.name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.global.deployment.name }}
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Object
+      object:
+        describedObject:
+          kind: Service
+          name: {{ .Values.global.deployment.name }}
+        metric:
+          name: deployment_http_requests_qps
+        target:
+          type: AverageValue
+          averageValue: 5000m
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.hpa.statefulset.name }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: {{ .Values.global.statefulset.name }}
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Object
+      object:
+        describedObject:
+          kind: Service
+          name: {{ .Values.global.statefulset.name }}
+        metric:
+          name: statefulset_http_requests_qps
+        target:
+          type: AverageValue
+          averageValue: 5000m

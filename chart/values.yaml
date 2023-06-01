@@ -1,0 +1,12 @@
+global:
+  deployment:
+    name: app-deployment-demo
+    image: tangwanyan/hpa-deployment:v1
+  statefulset:
+    name: app-statefulset-demo
+    image: tangwanyan/hpa-statefulset:v1
+hpa:
+  deployment:
+    name: app-deployment-hpa
+  statefulset:
+    name: app-statefulset-hpa

@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: deployment-http-requests
+spec:
+  groups:
+    - name: deployment-http_requests
+      rules:
+        - expr: |
+            sum(rate(deployment_http_requests_total[1m])) by (pod)
+          record: deployment_http_requests_qps
+          labels:
+            namespace: hpa-demo
+            service:  {{ .Values.global.deployment.name }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: statefulset-http-requests
+spec:
+  groups:
+    - name: statefulset-http-requests
+      rules:
+        - expr: |
+            sum(rate(statefulset_http_requests_total[1m])) by (pod)
+          record: statefulset_http_requests_qps
+          labels:
+            namespace: hpa-demo
+            service:  {{ .Values.global.statefulset.name }}

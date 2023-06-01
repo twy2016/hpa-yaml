@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.deployment.name }}
+  labels:
+    app: {{ .Values.global.deployment.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.deployment.name }}
+  endpoints:
+    - port: http
+      interval: 5s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Values.global.statefulset.name }}
+  labels:
+    app: {{ .Values.global.statefulset.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.global.statefulset.name }}
+  endpoints:
+    - port: web
+      interval: 5s
